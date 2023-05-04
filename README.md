@@ -1,6 +1,6 @@
 # kektris
 
-4-quarter tetris created by [Pyxel](https://github.com/kitao/pyxel/issues)
+4-quarter tetris created by [Pyxel](https://github.com/kitao/pyxel)
 
 Typicaly: `pip install -e .[dev]`
 
@@ -34,4 +34,4 @@ Pyxel application file also can be converted to an executable or an HTML file wi
 
 ## Play the game
 
-[html launcger](example/kektris.html 'kektris')
+[wasm launcher](https://kitao.github.io/pyxel/wasm/launcher/?play=KonstantinKlepikov.kektris.example.kektris)
