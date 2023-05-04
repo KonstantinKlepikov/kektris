@@ -1,4 +1,4 @@
-from kektris.constraints import FigureOrientation
+from src.kektris.constraints import FigureOrientation
 
 
 def test_figure_orientations():

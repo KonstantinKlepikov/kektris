@@ -1,5 +1,6 @@
 test:
 	python -m pytest tests -x -s -v
+	# pytest tests -x -s -v
 
 run:
-	python -m kektris
+	python src/kektris/kektris.py

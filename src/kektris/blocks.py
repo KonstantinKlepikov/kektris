@@ -1,11 +1,11 @@
 from typing import TypeAlias, Optional
-from kektris.constraints import (
+from constraints import (
     Direction,
     Orientation,
     CellState,
     FigureOrientation,
         )
-from kektris.constraints import GameConst as const
+from constraints import GameConst as const
 
 
 class Cell:
@@ -151,7 +151,7 @@ class Window:
             self.move_direction = move_direction
         self._get_window: Optional[list[list[Cell | None]]] = None
         self._map_window: Optional[list[Cell]] = None
-        self._quarter: list[tuple[int, int]] = None
+        self._quarter: Optional[list[tuple[int, int]]] = None
 
     def __repr__(self) -> str:
         return f'Window top_left: {self.top_left}, orientation: {self.orientation.name} ' \

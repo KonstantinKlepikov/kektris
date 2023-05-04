@@ -7,5 +7,8 @@ testpaths = [
   "tests",
 ]
 pythonpath = [
-  ".", "kektris"
+  "src/kektris",
+]
+addopts = [
+    "--import-mode=importlib",
 ]

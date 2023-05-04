@@ -37,6 +37,7 @@ SOURCE_URL = 'https://github.com/KonstantinKlepikov/pixel-roj'
 
 setup(
     name=NAME,
+    version='0.0.1',
     install_requires=get_dependencies('requirements.txt'),
     extras_require={
         "dev": get_dependencies('requirements-dev.txt'),
@@ -56,4 +57,5 @@ setup(
     license='MIT',
     python_requires='>=3.10',
     packages=find_packages(exclude=('tests*',)),
+    package_dir={'': 'src'},
 )

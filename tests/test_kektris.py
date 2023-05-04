@@ -1,7 +1,7 @@
 import pytest
-from kektris.kektris import Game
-from kektris.blocks import Grid, Figure
-from kektris.constraints import FigureOrientation, Direction
+from src.kektris.kektris import Game
+from src.kektris.blocks import Grid, Figure
+from src.kektris.constraints import FigureOrientation, Direction
 from conftest import FixedSeed
 
 

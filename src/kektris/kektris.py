@@ -1,9 +1,9 @@
 import pyxel
 import random
 from typing import Optional
-from kektris.blocks import Grid, Figure, Window
-from kektris.constraints import Direction, FigureOrientation
-from kektris.constraints import GameConst as const
+from blocks import Grid, Figure, Window
+from constraints import Direction, FigureOrientation
+from constraints import GameConst as const
 
 
 class Game:
@@ -374,3 +374,7 @@ class Game:
                     self.is_over = True
                     break
         return self.is_over
+
+
+if __name__ == '__main__':
+    Game()

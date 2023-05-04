@@ -2,8 +2,8 @@ import pytest
 import random
 import pyxel
 from typing import Callable
-from kektris.kektris import Game
-from kektris.blocks import Grid
+from src.kektris.kektris import Game
+from src.kektris.blocks import Grid
 
 
 class FixedSeed:
