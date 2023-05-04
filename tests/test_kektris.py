@@ -1,8 +1,8 @@
 import pytest
-from src.kektris.kektris import Game
-from src.kektris.blocks import Grid, Figure
-from src.kektris.constraints import FigureOrientation, Direction
-from conftest import FixedSeed
+from kektris.kektris import Game
+from blocks import Grid, Figure
+from constraints import FigureOrientation, Direction
+from tests.conftest import FixedSeed
 
 
 class TestGame:
