@@ -33,7 +33,7 @@ AUTHOR = 'Konstantin Klepikov'
 EMAIL = 'oformleno@gmail.com'
 DESCRIPTION = '4-quarter tetris created by Pyxel'
 LONG_DESCRIPTION = (here / "README.md").read_text(encoding="utf-8")
-SOURCE_URL = 'https://github.com/KonstantinKlepikov/pixel-roj'
+SOURCE_URL = 'https://github.com/KonstantinKlepikov/kektris'
 
 setup(
     name=NAME,
