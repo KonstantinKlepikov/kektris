@@ -2,6 +2,7 @@ import pytest
 from kektris.kektris import Game
 from blocks import Grid, Figure
 from constraints import FigureOrientation, Direction
+from constraints import GameConst as const
 from tests.conftest import FixedSeed
 
 
@@ -217,10 +218,20 @@ class TestGame:
         """
         make_app._change_speed()
         assert make_app.speed == 0, 'mistaken grown'
-        make_app.score = 1000
+
+        make_app.score = const.SPEED_MODIFICATOR
         make_app._change_speed()
         assert make_app.speed == 1, 'not grown'
-        assert make_app.speed_color_timeout == 60, 'wrong timout'
+        assert make_app.speed_color_timeout == const.COLOR_TIMOUT, 'wrong timout'
+
+        make_app.score = const.SPEED_MODIFICATOR*const.GAME_SPEED
+        make_app.speed = const.GAME_SPEED-1
+        make_app._change_speed()
+        assert make_app.speed == const.GAME_SPEED, 'not grown'
+
+        make_app.score = const.SPEED_MODIFICATOR*100000
+        make_app._change_speed()
+        assert make_app.speed == const.GAME_SPEED, 'wrong grown'
 
     @pytest.mark.parametrize(
         'positions,result', [
