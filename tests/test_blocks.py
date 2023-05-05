@@ -1,6 +1,6 @@
 import pytest
 from blocks import Cell, Grid, Figure, Window
-from constraints import FigureOrientation, Direction
+from constraints import FigureOrientation, Direction, Orientation
 
 
 class TestCell:
@@ -258,7 +258,7 @@ class TestWindow:
             ) -> None:
         """Test is figure not in quarter
         """
-        window = Window((15,15), FigureOrientation.O_D, grid, direction)
+        window = Window((15,15), FigureOrientation.O, grid, direction)
         assert not window.is_in_quarter(), 'in quarter'
 
     @pytest.mark.parametrize('top_left,result', [
@@ -377,10 +377,26 @@ class TestFigure:
                 ):
             figure._choose_orientation(Direction.DOWN)
 
-    @pytest.mark.skip('TODO: add me')
-    def test_choose_orientation(self, grid: Grid) -> None:
+    def test_choose_orientation_raise_if_square(self, grid: Grid) -> None:
+        """Test choose orientation raise if square
+        """
+        window = Window((0, 0), FigureOrientation.O, grid, Direction.LEFT)
+        figure = Figure(window)
+        with pytest.raises(
+            ValueError,
+            match="Square can't be rotated - is a square!"
+                ):
+            figure._choose_orientation(Direction.LEFT)
+
+    @pytest.mark.skip('TODO: rewrite me')
+    def test_choose_orientation(self, figure: Figure) -> None:
         """Test choose orientation
         """
+        if figure.window.orientation != FigureOrientation.O:
+            assert figure._choose_orientation(Direction.LEFT) == Orientation.U, \
+                'wrong orientation for right'
+            assert figure._choose_orientation(Direction.RIGHT) == Orientation.U, \
+                'wrong orientation for left'
 
     @pytest.mark.skip('TODO: rewrite me')
     @pytest.mark.parametrize(

@@ -14,6 +14,8 @@ class BaseEnum(Enum):
 
     @classmethod
     def get_includes(cls) -> list['BaseEnum']:
+        """This used for randobm figure generation
+        """
         return [i for i in cls]
 
     @classmethod
@@ -50,6 +52,7 @@ class CellState(BaseEnum):
 class FigureOrientation(BaseEnum):
     """All figures orientation (by longest flat side faces)
     """
+
     # all orientations of figure I
     I_U = (
         (False, False, False, False),
@@ -77,25 +80,7 @@ class FigureOrientation(BaseEnum):
             )
 
     # all orientations of figure O
-    O_U = (
-        (False, False, False, False),
-        (False, True, True, False),
-        (False, True, True, False),
-        (False, False, False, False),
-            )
-    O_L = (
-        (False, False, False, False),
-        (False, True, True, False),
-        (False, True, True, False),
-        (False, False, False, False),
-            )
-    O_D = (
-        (False, False, False, False),
-        (False, True, True, False),
-        (False, True, True, False),
-        (False, False, False, False),
-            )
-    O_R = (
+    O = (
         (False, False, False, False),
         (False, True, True, False),
         (False, True, True, False),
@@ -231,6 +216,15 @@ class FigureOrientation(BaseEnum):
         (False, True, False, False),
         (False, False, False, False),
             )
+
+    @classmethod
+    def get_includes(cls) -> list['FigureOrientation']:
+        """This used for randobm figure generation
+        """
+        includes = [i for i in cls]
+        for _ in range(3):
+            includes.append(cls.O)
+        return includes
 
 class GameConst:
     """Game constants"""

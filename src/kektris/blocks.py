@@ -292,7 +292,8 @@ class Figure:
     def rotate_figure(self, direction: Direction) -> Optional[Window]:
         """Rotates a figure in a given rotation side
         """
-        new_window = Window(
+        try:
+            return Window(
             self.window.top_left,
             FigureOrientation[
                 self.shape + '_' + self._choose_orientation(direction).name
@@ -300,11 +301,14 @@ class Figure:
             self.window.grid,
             self.window.move_direction
                 )
-        return new_window
+        except ValueError:
+            return self.window
 
     def _choose_orientation(self, direction: Direction) -> Orientation:
         """Choose orientation of figure after rotation
         """
+        if self.window.orientation == FigureOrientation.O:
+            raise ValueError("Square can't be rotated - is a square!")
         ind = Orientation[self.window.orientation.name[2]].value
         match direction, ind:
             case Direction.RIGHT, 4:
