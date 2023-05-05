@@ -345,7 +345,8 @@ class Game:
     def _change_speed(self) -> None:
         """Change speed and set flash timeout
         """
-        if self.score // const.SPEED_MODIFICATOR > self.speed:
+        if self.score // const.SPEED_MODIFICATOR > self.speed \
+                 and self.speed < const.GAME_SPEED:
             self.speed += 1
             self.speed_color_timeout = const.COLOR_TIMOUT
 

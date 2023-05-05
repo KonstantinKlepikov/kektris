@@ -152,7 +152,6 @@ class TestWindow:
         """Test get_window
         """
         window = Window(arrive_pos, FigureOrientation.I_L, grid)
-        print(id(window.move_direction), id(direction))
         assert window.move_direction == direction, 'wrong direction'
 
     def test_window_not_created_in_a_wrong_side(self, grid: Grid) -> None:
