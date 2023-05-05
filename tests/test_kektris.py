@@ -27,6 +27,16 @@ class TestGame:
             assert top_left == (-4, 21), 'wrong top left position'
             assert orientation == FigureOrientation.I_R, 'wrong orientation'
 
+    def test_generate_figure_start_position_probability(self, make_app: Game) -> None:
+        """Test generate_figure_start_position probabilitie
+        """
+        figures = {name: 0 for name in FigureOrientation.get_names()}
+        with FixedSeed(42):
+            for _ in range(1000):
+                figures[make_app._generate_figure_start_position()[1].name] += 1
+            assert figures['O'] == 144, 'wrong sample'
+            assert figures['I_U'] == 24, 'wrong sample'
+
     def test_arrive_figure(self, make_app: Game) -> None:
         """Test arrive figure
         """
