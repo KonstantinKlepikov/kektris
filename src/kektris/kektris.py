@@ -30,6 +30,7 @@ class Game:
         # game
         self.frame_count_from_last_move: int = 0
         self.is_over: bool = False
+        self.is_start: bool = False
 
     def draw(self) -> None:
         """Draw current screen
@@ -67,13 +68,13 @@ class Game:
 
         move_direction = None
         rotate_direction = None
-        if pyxel.btnp(pyxel.KEY_LEFT, 12, 2):
+        if pyxel.btnp(pyxel.KEY_LEFT, 8, 1):
             move_direction = Direction.LEFT
-        elif pyxel.btnp(pyxel.KEY_RIGHT, 12, 2):
+        elif pyxel.btnp(pyxel.KEY_RIGHT, 8, 1):
             move_direction = Direction.RIGHT
-        elif pyxel.btnp(pyxel.KEY_DOWN, 12, 2):
+        elif pyxel.btnp(pyxel.KEY_DOWN, 8, 1):
             move_direction = Direction.DOWN
-        elif pyxel.btnp(pyxel.KEY_UP, 12, 2):
+        elif pyxel.btnp(pyxel.KEY_UP, 8, 1):
             move_direction = Direction.UP
         elif pyxel.btnp(pyxel.KEY_Z, 12, 20):
             rotate_direction = Direction.LEFT
@@ -141,23 +142,31 @@ class Game:
         pyxel.rectb(42, 235, 13, 13, 12)
 
         pyxel.text(19, 224, "Z", 1)
-        pyxel.text(33, 223, "^", 12)
-        pyxel.text(47, 224, "W", 1)
+        pyxel.pset(34, 225, 12)
+        pyxel.pset(33, 226, 12)
+        pyxel.pset(35, 226, 12)
+        pyxel.pset(32, 227, 12)
+        pyxel.pset(36, 227, 12)
+        pyxel.text(47, 224, "X", 1)
         pyxel.text(19, 239, "<", 12)
-        pyxel.text(33, 239, "v", 12)
+        pyxel.pset(32, 240, 12)
+        pyxel.pset(36, 240, 12)
+        pyxel.pset(33, 241, 12)
+        pyxel.pset(35, 241, 12)
+        pyxel.pset(34, 242, 12)
         pyxel.text(47, 239, ">", 12)
 
         pyxel.rectb(62, 220, 13, 13, 9)
         pyxel.text(67, 224, "R", 9)
         pyxel.text(77, 224, "restart", 9)
 
-        pyxel.rectb(107, 220, 13, 13, 12)
-        pyxel.text(112, 224, "P", self._hide_reveal(self.paused))
-        pyxel.text(122, 224, "pause", 12)
+        pyxel.rectb(110, 220, 13, 13, 12)
+        pyxel.text(115, 224, "P", self._hide_reveal(self.paused))
+        pyxel.text(125, 224, "play/pause", 12)
 
-        pyxel.rectb(144, 220, 13, 13, 12)
-        pyxel.text(149, 224, "G", self._hide_reveal(self.grid_higlight))
-        pyxel.text(159, 224, "grid", 12)
+        pyxel.rectb(170, 220, 13, 13, 12)
+        pyxel.text(175, 224, "G", self._hide_reveal(self.grid_higlight))
+        pyxel.text(185, 224, "grid", 12)
 
     def _draw_aside(self) -> None:
         """Draw aside parameters
@@ -173,6 +182,9 @@ class Game:
 
         if self.is_over:
             pyxel.text(219, 110, "GAME END", pyxel.frame_count % 8)
+        elif self.paused:
+            pyxel.text(219, 110, "Press P", pyxel.frame_count % 8)
+            pyxel.text(219, 115, "to play", pyxel.frame_count % 8)
 
     def _mark_grid(self) -> None:
         """Draw grid mark
@@ -184,7 +196,7 @@ class Game:
                 pyxel.line(p, 10, p, 214, 13)
                 pyxel.line(10, p, 214, p, 13)
 
-        if not self.is_over:
+        if not self.is_over and not self.paused:
             match self.figure.window.move_direction:
                 case Direction.RIGHT | Direction.LEFT:
                     pyxel.line(112, 10, 112, 214, pyxel.frame_count % 8)
