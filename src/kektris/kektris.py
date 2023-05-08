@@ -43,9 +43,6 @@ class Game:
     def update(self) -> None:
         """Update current game state
         """
-        if pyxel.btnp(pyxel.KEY_T):
-            pyxel.quit()
-
         if pyxel.btnp(pyxel.KEY_R):
             self.reset()
             return
@@ -150,21 +147,17 @@ class Game:
         pyxel.text(33, 239, "v", 12)
         pyxel.text(47, 239, ">", 12)
 
-        pyxel.rectb(62, 220, 13, 13, 8)
-        pyxel.text(67, 224, "T", 8)
-        pyxel.text(77, 224, "exit", 8)
+        pyxel.rectb(62, 220, 13, 13, 9)
+        pyxel.text(67, 224, "R", 9)
+        pyxel.text(77, 224, "restart", 9)
 
-        pyxel.rectb(95, 220, 13, 13, 9)
-        pyxel.text(100, 224, "R", 9)
-        pyxel.text(110, 224, "restart", 9)
+        pyxel.rectb(107, 220, 13, 13, 12)
+        pyxel.text(112, 224, "P", self._hide_reveal(self.paused))
+        pyxel.text(122, 224, "pause", 12)
 
-        pyxel.rectb(140, 220, 13, 13, 12)
-        pyxel.text(145, 224, "P", self._hide_reveal(self.paused))
-        pyxel.text(155, 224, "pause", 12)
-
-        pyxel.rectb(177, 220, 13, 13, 12)
-        pyxel.text(182, 224, "G", self._hide_reveal(self.grid_higlight))
-        pyxel.text(192, 224, "grid", 12)
+        pyxel.rectb(144, 220, 13, 13, 12)
+        pyxel.text(149, 224, "G", self._hide_reveal(self.grid_higlight))
+        pyxel.text(159, 224, "grid", 12)
 
     def _draw_aside(self) -> None:
         """Draw aside parameters
