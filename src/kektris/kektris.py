@@ -179,22 +179,34 @@ class Game:
         """
         pyxel.rectb(10, 10, 205, 205, 1)
 
+        if self.grid_higlight:
+            for p in range(10, 217, 6):
+                pyxel.line(p, 10, p, 214, 13)
+                pyxel.line(10, p, 214, p, 13)
+
         if not self.is_over:
             match self.figure.window.move_direction:
                 case Direction.RIGHT | Direction.LEFT:
-                    color = (15, pyxel.frame_count % 8)
+                    pyxel.line(112, 10, 112, 214, pyxel.frame_count % 8)
                 case Direction.DOWN | Direction.UP:
-                    color = (pyxel.frame_count % 8, 15)
-                case _:
-                    color = (15, 15)
-            pyxel.line(112, 10, 112, 214, color[1])
-            pyxel.line(10, 112, 214, 112, color[0])
+                    pyxel.line(10, 112, 214, 112, pyxel.frame_count % 8)
 
-            if self.grid_higlight:
-                for p in range(10, 217, 6):
-                    if p != 112:
-                        pyxel.line(p, 10, p, 214, 13)
-                        pyxel.line(10, p, 214, p, 13)
+        # if not self.is_over:
+        #     match self.figure.window.move_direction:
+        #         case Direction.RIGHT | Direction.LEFT:
+        #             color = (13, pyxel.frame_count % 8)
+        #         case Direction.DOWN | Direction.UP:
+        #             color = (pyxel.frame_count % 8, 13)
+        #         case _:
+        #             color = (13, 13)
+        #     pyxel.line(112, 10, 112, 214, color[1])
+        #     pyxel.line(10, 112, 214, 112, color[0])
+
+            # if self.grid_higlight:
+            #     for p in range(10, 217, 6):
+            #         if p != 112:
+            #             pyxel.line(p, 10, p, 214, 13)
+            #             pyxel.line(10, p, 214, p, 13)
 
     def _arrive_figure(self) -> Figure:
         """Arrive figure at random
