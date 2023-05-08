@@ -191,23 +191,6 @@ class Game:
                 case Direction.DOWN | Direction.UP:
                     pyxel.line(10, 112, 214, 112, pyxel.frame_count % 8)
 
-        # if not self.is_over:
-        #     match self.figure.window.move_direction:
-        #         case Direction.RIGHT | Direction.LEFT:
-        #             color = (13, pyxel.frame_count % 8)
-        #         case Direction.DOWN | Direction.UP:
-        #             color = (pyxel.frame_count % 8, 13)
-        #         case _:
-        #             color = (13, 13)
-        #     pyxel.line(112, 10, 112, 214, color[1])
-        #     pyxel.line(10, 112, 214, 112, color[0])
-
-            # if self.grid_higlight:
-            #     for p in range(10, 217, 6):
-            #         if p != 112:
-            #             pyxel.line(p, 10, p, 214, 13)
-            #             pyxel.line(10, p, 214, p, 13)
-
     def _arrive_figure(self) -> Figure:
         """Arrive figure at random
         """
