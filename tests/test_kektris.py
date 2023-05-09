@@ -23,7 +23,7 @@ class TestGame:
         """Test random figure generation
         """
         with FixedSeed(42):
-            top_left, orientation = make_app._generate_figure_start_position()
+            top_left, orientation = make_app.generate_figure_start_position()
             assert isinstance(top_left, tuple), 'wrong result'
             assert top_left == (-4, 21), 'wrong top left position'
             assert orientation == FigureOrientation.I_R, 'wrong orientation'
@@ -34,7 +34,7 @@ class TestGame:
         figures = {name: 0 for name in FigureOrientation.get_names()}
         with FixedSeed(42):
             for _ in range(1000):
-                figures[make_app._generate_figure_start_position()[1].name] += 1
+                figures[make_app.generate_figure_start_position()[1].name] += 1
             assert figures['O'] == 144, 'wrong sample'
             assert figures['I_U'] == 24, 'wrong sample'
 
@@ -42,7 +42,7 @@ class TestGame:
         """Test arrive figure
         """
         with FixedSeed(42):
-            figure = make_app._arrive_figure()
+            figure = make_app.arrive_figure()
             assert isinstance(figure, Figure), 'wrong figure move_direction'
             assert figure.window.top_left == (-4, 21), \
                 'wrong top left position'
@@ -106,7 +106,7 @@ class TestGame:
             make_app.grid.grid[p[0]][p[1]].freeze()
         frozen_pos = [p.pos for p in make_app.grid.get_frozen]
         assert len(make_app.grid.get_frozen) == len(frozen), 'wrong frozen'
-        line = make_app._check_line(1, frozen_pos)
+        line = make_app.check_line(1, frozen_pos)
         assert isinstance(line, list), 'wrong line type'
         assert isinstance(line[0], tuple), 'wrong pos'
         assert line == result, 'wrong comparison'
@@ -123,7 +123,7 @@ class TestGame:
             make_app.grid.grid[p][0].freeze()
         frozen_pos = [p.pos for p in make_app.grid.get_frozen]
         assert len(make_app.grid.get_frozen) == 15, 'wrong frozen'
-        line = make_app._check_line(1, frozen_pos)
+        line = make_app.check_line(1, frozen_pos)
         assert isinstance(line, list), 'wrong line type'
         assert isinstance(line[0], tuple), 'wrong pos'
         assert len(line) == 12, 'wrong line lenght'
@@ -133,15 +133,15 @@ class TestGame:
         """Test get shift for frozen cells
         """
         make_app.figure.window.move_direction = Direction.LEFT
-        assert make_app._get_shift(0, 0) == (1, 0), 'wrong left shift'
-        assert make_app._get_shift(12, 0) == (13, 0), 'wrong colossal shift'
+        assert make_app.get_shift(0, 0) == (1, 0), 'wrong left shift'
+        assert make_app.get_shift(12, 0) == (13, 0), 'wrong colossal shift'
         make_app.figure.window.move_direction = Direction.RIGHT
-        assert make_app._get_shift(0, 0) == (-1, 0), 'wrong right shift'
-        assert make_app._get_shift(12, 0) == (11, 0), 'wrong colossal shift'
+        assert make_app.get_shift(0, 0) == (-1, 0), 'wrong right shift'
+        assert make_app.get_shift(12, 0) == (11, 0), 'wrong colossal shift'
         make_app.figure.window.move_direction = Direction.UP
-        assert make_app._get_shift(0, 0) == (0, 1), 'wrong up shift'
+        assert make_app.get_shift(0, 0) == (0, 1), 'wrong up shift'
         make_app.figure.window.move_direction = Direction.DOWN
-        assert make_app._get_shift(0, 0) == (0, -1), 'wrong down shift'
+        assert make_app.get_shift(0, 0) == (0, -1), 'wrong down shift'
 
     @pytest.mark.parametrize(
         'frozen,line,result,direction', [
@@ -173,7 +173,7 @@ class TestGame:
         quarter = make_app.figure.window.quarter
         for pos in frozen:
             make_app.grid.grid[pos[0]][pos[1]].freeze()
-        shifted = make_app._get_shifted_frozen(line)
+        shifted = make_app.get_shifted_frozen(line)
         assert shifted == result, 'wrong shifted'
         for pos in shifted:
             assert pos in quarter, 'not in quarter'
@@ -210,27 +210,27 @@ class TestGame:
         quarter = make_app.figure.window.quarter
         for pos in shifted:
             make_app.grid.grid[pos[0]][pos[1]].freeze()
-        make_app._move_shifted_frozen(shifted)
+        make_app.move_shifted_frozen(shifted)
         assert {cell.pos for cell in make_app.grid.get_frozen} == result, 'wrong result'
 
     def test_change_speed(self, make_app: Game) -> None:
         """Test change speed
         """
-        make_app._change_speed()
+        make_app.change_speed()
         assert make_app.speed == 0, 'mistaken grown'
 
         make_app.score = const.SPEED_MODIFICATOR
-        make_app._change_speed()
+        make_app.change_speed()
         assert make_app.speed == 1, 'not grown'
         assert make_app.speed_color_timeout == const.COLOR_TIMOUT, 'wrong timout'
 
         make_app.score = const.SPEED_MODIFICATOR*const.GAME_SPEED
         make_app.speed = const.GAME_SPEED-1
-        make_app._change_speed()
+        make_app.change_speed()
         assert make_app.speed == const.GAME_SPEED, 'not grown'
 
         make_app.score = const.SPEED_MODIFICATOR*100000
-        make_app._change_speed()
+        make_app.change_speed()
         assert make_app.speed == const.GAME_SPEED, 'wrong grown'
 
     @pytest.mark.parametrize(
@@ -254,4 +254,4 @@ class TestGame:
         assert not make_app.is_over, 'game over'
         for pos in positions:
             make_app.grid.grid[pos[0]][pos[1]].freeze()
-        assert make_app._is_game_over() == result, 'wrong result'
+        assert make_app.is_game_over() == result, 'wrong result'
