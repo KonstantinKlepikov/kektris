@@ -42,10 +42,10 @@ def mock_app(monkeypatch) -> Callable:
 def make_app(monkeypatch, mock_app: Callable) -> Game:
     """Make app
     """
-    def mock_draw_figures(*args, **kwargs) -> Callable:
+    def mock_draw_cells(*args, **kwargs) -> Callable:
         return None
 
-    monkeypatch.setattr(Game, "draw_figures", mock_draw_figures)
+    monkeypatch.setattr(Game, "draw_cells", mock_draw_cells)
     return Game()
 
 @pytest.fixture(scope='function')

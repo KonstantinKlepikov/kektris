@@ -31,7 +31,7 @@ class Game:
 
         # game
         self.frame_count_from_last_move: int = const.FRAME_COUNT
-        self.is_over: bool = False
+        self.is_game_over: bool = False
 
     def draw(self) -> None:
         """Draw current screen
@@ -40,7 +40,7 @@ class Game:
         self.draw_controls()
         self.draw_aside()
         self.mark_grid()
-        self.draw_figures()
+        self.draw_cells()
 
     def update(self) -> None:
         """Update current game state
@@ -61,7 +61,7 @@ class Game:
             else:
                 self.grid_higlight = True
 
-        if self.is_game_over():
+        if self.is_game_over:
             return
 
         if self.paused:
@@ -87,14 +87,7 @@ class Game:
 
         if self.frame_count_from_last_move == const.GAME_SPEED - self.speed:
             window = self.figure.move_figure(self.figure.window.move_direction)
-            if self.figure.is_valid_figure(window):
-                self.figure.block_figure(window)
-            else:
-                self.grid.freeze_blocked()
-                self.clear_rows()
-                self.push_next_figure()
-
-            self.frame_count_from_last_move = const.FRAME_COUNT
+            self.final_moves_and_game_checks(window)
             return
 
         self.frame_count_from_last_move += 1
@@ -131,6 +124,47 @@ class Game:
             return 0
         else:
             return -1
+
+    @staticmethod
+    def generate_figure_start_position() -> tuple[tuple[int, int], FigureOrientation]:
+        """Genrate random start position
+        """
+        return (
+            random.choice(const.ARRIVE),
+            random.choice(FigureOrientation.get_includes())
+                )
+
+    @staticmethod
+    def display_next_figure(window: Window) -> None:
+        """Draw next figure
+        """
+        for maps, cells in zip(window.orientation.value, const.NEXT_FIGURE_GRID_POS):
+            [
+                pyxel.rect(pos[0], pos[1], 5, 5, 10)
+                for cell, pos
+                in zip(maps, cells)
+                if cell
+                    ]
+
+    @staticmethod
+    def draw_up_marker(x: int, y: int, color: int = 12) -> None:
+        """Draw up marker
+        """
+        pyxel.pset(x, y, color)
+        pyxel.pset(x-1, y+1, color)
+        pyxel.pset(x+1, y+1, color)
+        pyxel.pset(x-2, y+2, color)
+        pyxel.pset(x+2, y+2, color)
+
+    @staticmethod
+    def draw_down_marker(x: int, y: int, color: int = 12) -> None:
+        """Draw down marker
+        """
+        pyxel.pset(x-2, y-2, color)
+        pyxel.pset(x+2, y-2, color)
+        pyxel.pset(x-1, y-1, color)
+        pyxel.pset(x+1, y-1, color)
+        pyxel.pset(x, y, color)
 
     def draw_controls(self) -> None:
         """Draw controls helper
@@ -179,7 +213,7 @@ class Game:
         for p in const.NEXT_FIGURE_GRID[1]:
             pyxel.line(219, p, 243, p, 13)
 
-        if not self.is_over:
+        if not self.is_game_over:
             pyxel.text(219, 115, "NEXT", 10)
             if not self.figure.window.is_full_on_grid():
                 window = self.figure.window
@@ -203,43 +237,11 @@ class Game:
             self.display_next_figure(window)
 
         # pause or game over
-        if self.is_over:
+        if self.is_game_over:
             pyxel.text(219, 175, "GAME END", pyxel.frame_count % 8)
         elif self.paused:
             pyxel.text(219, 175, "Press P", pyxel.frame_count % 8)
             pyxel.text(219, 182, "to play", pyxel.frame_count % 8)
-
-    @staticmethod
-    def display_next_figure(window: Window) -> None:
-        """Draw next figure
-        """
-        for maps, cells in zip(window.orientation.value, const.NEXT_FIGURE_GRID_POS):
-            [
-                pyxel.rect(pos[0], pos[1], 5, 5, 10)
-                for cell, pos
-                in zip(maps, cells)
-                if cell
-                    ]
-
-    @staticmethod
-    def draw_up_marker(x: int, y: int, color: int = 12) -> None:
-        """Draw up marker
-        """
-        pyxel.pset(x, y, color)
-        pyxel.pset(x-1, y+1, color)
-        pyxel.pset(x+1, y+1, color)
-        pyxel.pset(x-2, y+2, color)
-        pyxel.pset(x+2, y+2, color)
-
-    @staticmethod
-    def draw_down_marker(x: int, y: int, color: int = 12) -> None:
-        """Draw down marker
-        """
-        pyxel.pset(x-2, y-2, color)
-        pyxel.pset(x+2, y-2, color)
-        pyxel.pset(x-1, y-1, color)
-        pyxel.pset(x+1, y-1, color)
-        pyxel.pset(x, y, color)
 
     def mark_grid(self) -> None:
         """Draw grid mark
@@ -254,7 +256,7 @@ class Game:
                 pyxel.line(10, p, 214, p, 13)
 
         # azis
-        if not self.is_over and not self.paused:
+        if not self.is_game_over and not self.paused:
             match self.figure.window.move_direction:
                 case Direction.RIGHT | Direction.LEFT:
                     pyxel.line(112, 10, 112, 214, pyxel.frame_count % 8)
@@ -277,16 +279,7 @@ class Game:
         self.figure = self.figure_next
         self.figure_next = self.arrive_figure()
 
-    def generate_figure_start_position(
-        self) -> tuple[tuple[int, int], FigureOrientation]:
-        """Genrate random start position
-        """
-        return (
-            random.choice(const.ARRIVE),
-            random.choice(FigureOrientation.get_includes())
-                )
-
-    def draw_figures(self) -> None:
+    def draw_cells(self) -> None:
         """Draw blocked and frozen cells from Grid object
         """
         for n, row in enumerate(self.grid.grid):
@@ -323,7 +316,7 @@ class Game:
                     return [pos for pos in line if pos[s_d] in to_clear]
 
     def get_shift(self, shift_x: int, shift_y: int) -> tuple[int, int]:
-        """Get shift for frozen to move it
+        """Get shift for frozen to move it when clear line
         """
         match self.figure.window.move_direction:
             case Direction.RIGHT:
@@ -340,7 +333,7 @@ class Game:
         self,
         line: list[tuple[int, int]]
             ) -> list[tuple[int, int]]:
-        """Get shifted frozen positions for move
+        """Get shifted frozen positions to move cells when clear line
         """
         shift_x, shift_y = 0, 0
         shifted = []
@@ -386,8 +379,8 @@ class Game:
                 self.figure.block_figure(window)
 
     # TODO: test me
-    def clear_rows(self) -> None:
-        """Clear filled row
+    def clear_lines(self) -> None:
+        """Clear line
         """
         frozen_pos = [cell.pos for cell in self.grid.get_frozen]
         if len(frozen_pos) >= const.CLEAR_LENGTH:
@@ -401,7 +394,22 @@ class Game:
                     shifted = self.get_shifted_frozen(line)
                     if shifted:
                         self.move_shifted_frozen(shifted)
-                    self.clear_rows()
+                    self.clear_lines()
+
+    # TODO: test me
+    def final_moves_and_game_checks(self, window: Window) -> None:
+        """Move figures and check game conditions when count of frames
+        from lst move is overflow
+        """
+        if self.figure.is_valid_figure(window):
+            self.figure.block_figure(window)
+        elif not self.figure.window.is_full_on_grid():
+            self.is_game_over = True
+        else:
+            self.grid.freeze_blocked()
+            self.clear_lines()
+            self.push_next_figure()
+        self.frame_count_from_last_move = const.FRAME_COUNT
 
     def change_score(self) -> None:
         """Change score and set flash timeout
@@ -432,16 +440,6 @@ class Game:
         if marker:
             return pyxel.frame_count % 8
         return 12
-
-    def is_game_over(self) -> bool:
-        """Check is game over
-        """
-        if self.is_over == False:
-            for pos in const.GAME_OVER_ZONE:
-                if self.grid.grid[pos[0]][pos[1]].is_frozen:
-                    self.is_over = True
-                    break
-        return self.is_over
 
 
 if __name__ == '__main__':
