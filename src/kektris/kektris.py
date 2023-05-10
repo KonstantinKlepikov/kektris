@@ -21,6 +21,7 @@ class Game:
         self.speed: int = 0
         self.score_color_timeout = const.COLOR_TIMOUT
         self.speed_color_timeout = const.COLOR_TIMOUT
+        self.line_color_timeout = const.COLOR_TIMOUT
 
         # grid
         self.grid: Grid = Grid()
@@ -29,7 +30,7 @@ class Game:
         self.figure_next = self.arrive_figure()
 
         # game
-        self.frame_count_from_last_move: int = 0
+        self.frame_count_from_last_move: int = const.FRAME_COUNT
         self.is_over: bool = False
 
     def draw(self) -> None:
@@ -93,7 +94,7 @@ class Game:
                 self.clear_rows()
                 self.push_next_figure()
 
-            self.frame_count_from_last_move = 0
+            self.frame_count_from_last_move = const.FRAME_COUNT
             return
 
         self.frame_count_from_last_move += 1
@@ -170,7 +171,7 @@ class Game:
         pyxel.text(219, 60, str(self.speed), self.set_color("speed_color_timeout"))
 
         pyxel.text(219, 80, "LINE", 10)
-        pyxel.text(219, 90, str(const.CLEAR_LENGTH), 12)
+        pyxel.text(219, 90, str(const.CLEAR_LENGTH), self.set_color("line_color_timeout"))
 
         # display next figure
         for p in const.NEXT_FIGURE_GRID[0]:
@@ -187,15 +188,19 @@ class Game:
 
             match window.move_direction:
                 case Direction.RIGHT:
-                    pyxel.text(219, 125, ">", 12)
+                    pyxel.text(219, 125, ">>>", pyxel.frame_count % 8)
                 case Direction.LEFT:
-                    pyxel.text(219, 125, "<", 12)
+                    pyxel.text(219, 125, "<<<", pyxel.frame_count % 8)
                 case Direction.UP:
-                    self.draw_up_marker(221, 125)
+                    self.draw_up_marker(221, 125, pyxel.frame_count % 8)
+                    self.draw_up_marker(227, 125, pyxel.frame_count % 8)
+                    self.draw_up_marker(233, 125, pyxel.frame_count % 8)
                 case Direction.DOWN:
-                    self.draw_down_marker(221, 127)
+                    self.draw_down_marker(221, 127, pyxel.frame_count % 8)
+                    self.draw_down_marker(227, 127, pyxel.frame_count % 8)
+                    self.draw_down_marker(233, 127, pyxel.frame_count % 8)
 
-            self.draw_next_figure(window)
+            self.display_next_figure(window)
 
         # pause or game over
         if self.is_over:
@@ -205,7 +210,7 @@ class Game:
             pyxel.text(219, 182, "to play", pyxel.frame_count % 8)
 
     @staticmethod
-    def draw_next_figure(window: Window) -> None:
+    def display_next_figure(window: Window) -> None:
         """Draw next figure
         """
         for maps, cells in zip(window.orientation.value, const.NEXT_FIGURE_GRID_POS):
