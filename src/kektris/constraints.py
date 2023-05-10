@@ -251,9 +251,12 @@ class GameConst:
         [n for n in range(135, 165, 6)]
     NEXT_FIGURE_GRID_POS: list[list[tuple[int, int]]] = get_next_figure_grid_pos()
 
-    PRIZE_BY_CLEAR: int = 70
+    START_FRAME_COUNT: int = 5
     COLOR_TIMOUT: int = 60
-    CLEAR_LENGTH: int = 7
-    GAME_SPEED: int = 35
+
+    PRIZE_BY_CLEAR: int = 70
+    START_CLEAR_LENGTH: int = 7
+    MAX_CLEAR_LENGHT: int = 10
+    LENGHT_MODIFICATOR: int = 10000
+    MAX_GAME_SPEED: int = 35
     SPEED_MODIFICATOR: int = 1000
-    FRAME_COUNT: int = 5
