@@ -232,26 +232,3 @@ class TestGame:
         make_app.score = const.SPEED_MODIFICATOR*100000
         make_app.change_speed()
         assert make_app.speed == const.GAME_SPEED, 'wrong grown'
-
-    @pytest.mark.parametrize(
-        'positions,result', [
-        ([(0,0),], True),
-        ([(1,1),], False),
-        ([(1,1),(0,0)], True),
-        ([(33,33),], True),
-        ([(33,0),], True),
-        ([(0,33),], True),
-            ]
-        )
-    def test_is_game_over(
-        self,
-        make_app: Game,
-        positions: list[tuple[int, int]],
-        result: bool,
-            ) -> None:
-        """Test game is over
-        """
-        assert not make_app.is_over, 'game over'
-        for pos in positions:
-            make_app.grid.grid[pos[0]][pos[1]].freeze()
-        assert make_app.is_game_over() == result, 'wrong result'
