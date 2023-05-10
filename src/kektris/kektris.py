@@ -132,7 +132,7 @@ class Game:
             return -1
 
     def draw_controls(self) -> None:
-        """Draw controls
+        """Draw controls helper
         """
         pyxel.rectb(14, 220, 13, 13, 1)
         pyxel.rectb(28, 220, 13, 13, 12)
@@ -142,18 +142,10 @@ class Game:
         pyxel.rectb(42, 235, 13, 13, 12)
 
         pyxel.text(19, 224, "Z", 1)
-        pyxel.pset(34, 225, 12)
-        pyxel.pset(33, 226, 12)
-        pyxel.pset(35, 226, 12)
-        pyxel.pset(32, 227, 12)
-        pyxel.pset(36, 227, 12)
+        self.draw_up_marker(34, 225)
         pyxel.text(47, 224, "X", 1)
         pyxel.text(19, 239, "<", 12)
-        pyxel.pset(32, 240, 12)
-        pyxel.pset(36, 240, 12)
-        pyxel.pset(33, 241, 12)
-        pyxel.pset(35, 241, 12)
-        pyxel.pset(34, 242, 12)
+        self.draw_down_marker(34, 242)
         pyxel.text(47, 239, ">", 12)
 
         pyxel.rectb(62, 220, 13, 13, 9)
@@ -180,9 +172,14 @@ class Game:
         pyxel.text(219, 80, "LINE", 10)
         pyxel.text(219, 90, str(const.CLEAR_LENGTH), 12)
 
+        # display next figure
+        for p in const.NEXT_FIGURE_GRID[0]:
+            pyxel.line(p, 135, p, 159, 13)
+        for p in const.NEXT_FIGURE_GRID[1]:
+            pyxel.line(219, p, 243, p, 13)
+
         if not self.is_over:
-            pyxel.text(219, 110, "Next", 10)
-            pyxel.text(219, 115, "figure:", 10)
+            pyxel.text(219, 115, "NEXT", 10)
             if not self.figure.window.is_full_on_grid():
                 window = self.figure.window
             else:
@@ -190,46 +187,77 @@ class Game:
 
             match window.move_direction:
                 case Direction.RIGHT:
-                    pyxel.text(219, 125, "<", 12)
-                case Direction.LEFT:
                     pyxel.text(219, 125, ">", 12)
+                case Direction.LEFT:
+                    pyxel.text(219, 125, "<", 12)
                 case Direction.UP:
-                    pyxel.pset(219, 125, 12)
-                    pyxel.pset(223, 125, 12)
-                    pyxel.pset(220, 126, 12)
-                    pyxel.pset(222, 126, 12)
-                    pyxel.pset(221, 127, 12)
+                    self.draw_up_marker(221, 125)
                 case Direction.DOWN:
-                    pyxel.pset(221, 125, 12)
-                    pyxel.pset(220, 126, 12)
-                    pyxel.pset(222, 126, 12)
-                    pyxel.pset(219, 127, 12)
-                    pyxel.pset(223, 127, 12)
+                    self.draw_down_marker(221, 127)
 
-            pyxel.text(219, 135, window.orientation.name, 10)
+            self.draw_next_figure(window)
 
+        # pause or game over
         if self.is_over:
             pyxel.text(219, 175, "GAME END", pyxel.frame_count % 8)
         elif self.paused:
             pyxel.text(219, 175, "Press P", pyxel.frame_count % 8)
-            pyxel.text(219, 180, "to play", pyxel.frame_count % 8)
+            pyxel.text(219, 182, "to play", pyxel.frame_count % 8)
+
+    @staticmethod
+    def draw_next_figure(window: Window) -> None:
+        """Draw next figure
+        """
+        for maps, cells in zip(window.orientation.value, const.NEXT_FIGURE_GRID_POS):
+            [
+                pyxel.rect(pos[0], pos[1], 5, 5, 10)
+                for cell, pos
+                in zip(maps, cells)
+                if cell
+                    ]
+
+    @staticmethod
+    def draw_up_marker(x: int, y: int, color: int = 12) -> None:
+        """Draw up marker
+        """
+        pyxel.pset(x, y, color)
+        pyxel.pset(x-1, y+1, color)
+        pyxel.pset(x+1, y+1, color)
+        pyxel.pset(x-2, y+2, color)
+        pyxel.pset(x+2, y+2, color)
+
+    @staticmethod
+    def draw_down_marker(x: int, y: int, color: int = 12) -> None:
+        """Draw down marker
+        """
+        pyxel.pset(x-2, y-2, color)
+        pyxel.pset(x+2, y-2, color)
+        pyxel.pset(x-1, y-1, color)
+        pyxel.pset(x+1, y-1, color)
+        pyxel.pset(x, y, color)
 
     def mark_grid(self) -> None:
         """Draw grid mark
         """
+        # grid border
         pyxel.rectb(10, 10, 205, 205, 1)
 
+        # grid
         if self.grid_higlight:
             for p in range(10, 217, 6):
                 pyxel.line(p, 10, p, 214, 13)
                 pyxel.line(10, p, 214, p, 13)
 
+        # azis
         if not self.is_over and not self.paused:
             match self.figure.window.move_direction:
                 case Direction.RIGHT | Direction.LEFT:
                     pyxel.line(112, 10, 112, 214, pyxel.frame_count % 8)
                 case Direction.DOWN | Direction.UP:
                     pyxel.line(10, 112, 214, 112, pyxel.frame_count % 8)
+
+        # central point
+        pyxel.pset(112, 112, 8)
 
     def arrive_figure(self) -> Figure:
         """Arrive figure at random
