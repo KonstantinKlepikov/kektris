@@ -19,6 +19,7 @@ class Game:
         self.paused: bool = True
         self.score: int = 0
         self.speed: int = 0
+        self.line_lenght: int = const.START_CLEAR_LENGTH
         self.score_color_timeout = const.COLOR_TIMOUT
         self.speed_color_timeout = const.COLOR_TIMOUT
         self.line_color_timeout = const.COLOR_TIMOUT
@@ -30,7 +31,7 @@ class Game:
         self.figure_next = self.arrive_figure()
 
         # game
-        self.frame_count_from_last_move: int = const.FRAME_COUNT
+        self.frame_count_from_last_move: int = const.START_FRAME_COUNT
         self.is_game_over: bool = False
 
     def draw(self) -> None:
@@ -85,7 +86,7 @@ class Game:
         self.move_figure(move_direction, self.figure.move_figure)
         self.move_figure(rotate_direction, self.figure.rotate_figure)
 
-        if self.frame_count_from_last_move == const.GAME_SPEED - self.speed:
+        if self.frame_count_from_last_move == const.MAX_GAME_SPEED - self.speed:
             window = self.figure.move_figure(self.figure.window.move_direction)
             self.final_moves_and_game_checks(window)
             return
@@ -205,7 +206,7 @@ class Game:
         pyxel.text(219, 60, str(self.speed), self.set_color("speed_color_timeout"))
 
         pyxel.text(219, 80, "LINE", 10)
-        pyxel.text(219, 90, str(const.CLEAR_LENGTH), self.set_color("line_color_timeout"))
+        pyxel.text(219, 90, str(self.line_lenght), self.set_color("line_color_timeout"))
 
         # display next figure
         for p in const.NEXT_FIGURE_GRID[0]:
@@ -304,13 +305,13 @@ class Game:
         max_ = max(comparison) + 1
         for n in range(min_, max_):
             line = [pos for pos in frozen_pos if pos[dimension] == n]
-            if len(line) >= const.CLEAR_LENGTH:
+            if len(line) >= self.line_lenght:
                 l_comparison = sorted([pos[s_d] for pos in line])
                 _, chunked = self.get_chunked(l_comparison, [])
                 to_clear = [
                     n for chunk in chunked
                     for n in chunk
-                    if len(chunk) >= const.CLEAR_LENGTH
+                    if len(chunk) >= self.line_lenght
                         ]
                 if to_clear:
                     return [pos for pos in line if pos[s_d] in to_clear]
@@ -383,7 +384,7 @@ class Game:
         """Clear line
         """
         frozen_pos = [cell.pos for cell in self.grid.get_frozen]
-        if len(frozen_pos) >= const.CLEAR_LENGTH:
+        if len(frozen_pos) >= self.line_lenght:
             for dim in [0, 1]:
                 line = self.check_line(dim, frozen_pos)
                 if line:
@@ -391,6 +392,7 @@ class Game:
                         self.grid.grid[pos[0]][pos[1]].clear()
                         self.change_score()
                         self.change_speed()
+                        self.change_line_lenght()
                     shifted = self.get_shifted_frozen(line)
                     if shifted:
                         self.move_shifted_frozen(shifted)
@@ -409,7 +411,7 @@ class Game:
             self.grid.freeze_blocked()
             self.clear_lines()
             self.push_next_figure()
-        self.frame_count_from_last_move = const.FRAME_COUNT
+        self.frame_count_from_last_move = const.START_FRAME_COUNT
 
     def change_score(self) -> None:
         """Change score and set flash timeout
@@ -421,9 +423,18 @@ class Game:
         """Change speed and set flash timeout
         """
         if self.score // const.SPEED_MODIFICATOR > self.speed \
-                 and self.speed < const.GAME_SPEED:
+                 and self.speed < const.MAX_GAME_SPEED:
             self.speed += 1
             self.speed_color_timeout = const.COLOR_TIMOUT
+
+    def change_line_lenght(self) -> None:
+        """Change line lenght every X points to maximum y
+        """
+        if self.score // const.LENGHT_MODIFICATOR > \
+            self.line_lenght - const.START_CLEAR_LENGTH \
+            and self.line_lenght < const.MAX_CLEAR_LENGHT:
+                self.line_lenght += 1
+                self.line_color_timeout = const.COLOR_TIMOUT
 
     def set_color(self, color_attr: str) -> int:
         """Set flash color

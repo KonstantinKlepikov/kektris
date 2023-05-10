@@ -224,11 +224,30 @@ class TestGame:
         assert make_app.speed == 1, 'not grown'
         assert make_app.speed_color_timeout == const.COLOR_TIMOUT, 'wrong timout'
 
-        make_app.score = const.SPEED_MODIFICATOR*const.GAME_SPEED
-        make_app.speed = const.GAME_SPEED-1
+        make_app.score = const.SPEED_MODIFICATOR*const.MAX_GAME_SPEED
+        make_app.speed = const.MAX_GAME_SPEED-1
         make_app.change_speed()
-        assert make_app.speed == const.GAME_SPEED, 'not grown'
+        assert make_app.speed == const.MAX_GAME_SPEED, 'not grown'
 
         make_app.score = const.SPEED_MODIFICATOR*100000
         make_app.change_speed()
-        assert make_app.speed == const.GAME_SPEED, 'wrong grown'
+        assert make_app.speed == const.MAX_GAME_SPEED, 'wrong grown'
+
+    def test_change_clear_line_lenght(self, make_app: Game) -> None:
+        """Test change clear line lenght
+        """
+        make_app.change_line_lenght()
+        assert make_app.line_lenght == const.START_CLEAR_LENGTH, 'mistaken grown'
+
+        make_app.score = const.LENGHT_MODIFICATOR
+        make_app.change_line_lenght()
+        assert make_app.line_lenght == const.START_CLEAR_LENGTH + 1, 'not grown'
+        assert make_app.line_color_timeout == const.COLOR_TIMOUT, 'wrong timout'
+
+        make_app.score = const.LENGHT_MODIFICATOR*100000
+        make_app.line_lenght = const.MAX_CLEAR_LENGHT-1
+        make_app.change_line_lenght()
+        assert make_app.line_lenght == const.MAX_CLEAR_LENGHT, 'not grown'
+
+        make_app.change_line_lenght()
+        assert make_app.line_lenght == const.MAX_CLEAR_LENGHT, 'wrong grown'
