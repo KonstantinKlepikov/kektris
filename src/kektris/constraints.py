@@ -226,6 +226,25 @@ class FigureOrientation(BaseEnum):
             includes.append(cls.O)
         return includes
 
+    def get_figure_color(self) -> int:
+        """Color of figure
+        """
+        match self.name[0]:
+            case 'I':
+                return 8
+            case 'O':
+                return 9
+            case 'J':
+                return 14
+            case 'L':
+                return 11
+            case 'S':
+                return 12
+            case 'Z':
+                return 15
+            case 'T':
+                return 2
+
 
 def get_next_figure_grid_pos() -> list[list[tuple[int, int]]]:
     return [[(x+1, y+1) for x in range(219, 243, 6)] for y in range(135, 155, 6)]
