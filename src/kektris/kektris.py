@@ -376,7 +376,7 @@ class Game:
         """
         if direction and self.figure.window.is_on_grid():
             window: Window = operation(direction)
-            if self.figure.is_valid_figure(window) and window.is_full_on_grid():
+            if self.figure.is_valid_figure(window) and window.is_on_grid():
                 self.figure.block_figure(window)
 
     # TODO: test me

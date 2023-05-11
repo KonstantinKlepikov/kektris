@@ -135,6 +135,14 @@ class TestWindow:
     """Test FigureWinfow class
     """
 
+    @pytest.fixture(scope='function', params=FigureOrientation.get_includes())
+    def window(self, grid: Grid, request) -> Window:
+        """Make window
+        """
+        window = Window((0, 0), request.param, grid, Direction.LEFT)
+        window.param = request.param
+        return window
+
     @pytest.mark.parametrize(
         'direction,arrive_pos', [
             (Direction.RIGHT, (-4, 0)),
@@ -218,6 +226,17 @@ class TestWindow:
         m = window.map_window
         assert len(m) == 1, 'wrong result len'
         assert m[0].pos == grid.grid[33][32].pos, 'wrong figure'
+
+    def test_window_figure_pos(self, window: Window) -> None:
+        """Test window figure position returns positions on grid
+        """
+        assert len(window.window_figure_pos) == 4, 'wrong figure positions'
+
+    def test_window_figure_pos_dont_return_offgrid(self, window: Window) -> None:
+        """Test window figure position returns positions offgrid
+        """
+        window.top_left = (-4, -4)
+        assert len(window.window_figure_pos) == 4, 'wrong figure positions'
 
     def test_has_frozen(self, grid: Grid) -> None:
         """Test has frozen mapped window
