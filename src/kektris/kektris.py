@@ -139,9 +139,10 @@ class Game:
     def display_next_figure(window: Window) -> None:
         """Draw next figure
         """
+        blocked_color = window.orientation.get_figure_color()
         for maps, cells in zip(window.orientation.value, const.NEXT_FIGURE_GRID_POS):
             [
-                pyxel.rect(pos[0], pos[1], 5, 5, 10)
+                pyxel.rect(pos[0], pos[1], 5, 5, blocked_color)
                 for cell, pos
                 in zip(maps, cells)
                 if cell
@@ -184,9 +185,9 @@ class Game:
         self.draw_down_marker(34, 242)
         pyxel.text(47, 239, ">", 12)
 
-        pyxel.rectb(62, 220, 13, 13, 9)
-        pyxel.text(67, 224, "R", 9)
-        pyxel.text(77, 224, "restart", 9)
+        pyxel.rectb(62, 220, 13, 13, 10)
+        pyxel.text(67, 224, "R", 10)
+        pyxel.text(77, 224, "restart", 10)
 
         pyxel.rectb(110, 220, 13, 13, 12)
         pyxel.text(115, 224, "P", self.hide_reveal(self.paused))
@@ -256,7 +257,7 @@ class Game:
                 pyxel.line(p, 10, p, 214, 13)
                 pyxel.line(10, p, 214, p, 13)
 
-        # azis
+        # axis
         if not self.is_game_over and not self.paused:
             match self.figure.window.move_direction:
                 case Direction.RIGHT | Direction.LEFT:
@@ -283,12 +284,13 @@ class Game:
     def draw_cells(self) -> None:
         """Draw blocked and frozen cells from Grid object
         """
+        blocked_color = self.figure.window.orientation.get_figure_color()
         for n, row in enumerate(self.grid.grid):
             for m, cell in enumerate(row):
                 x = cell.pos[0] * 5 + 11 + n
                 y = cell.pos[1] * 5 + 11 + m
                 if cell.is_blocked:
-                    pyxel.rect(x, y, 5, 5, 10)
+                    pyxel.rect(x, y, 5, 5, blocked_color)
                 if cell.is_frozen:
                     pyxel.rect(x, y, 5, 5, 7)
 
