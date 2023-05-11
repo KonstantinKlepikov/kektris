@@ -244,9 +244,6 @@ class GameConst:
     BOTTOM_QUARTER: list[tuple[int, int]] = [(x, y) for x in range(0, 34) for y in range(17, 37)]
     TOP_QUARTER: list[tuple[int, int]] = [(x, y) for x in range(0, 34) for y in range(-4, 17)]
 
-    GAME_OVER_ZONE: set[tuple[int, int]] = {(x, y) for x in range(0, 34) for y in [0, 33]} | \
-        {(x, y) for x in [0, 33] for y in range(0, 34)}
-
     NEXT_FIGURE_GRID: tuple[list[int], list[int]] = [n for n in range(219, 249, 6)], \
         [n for n in range(135, 165, 6)]
     NEXT_FIGURE_GRID_POS: list[list[tuple[int, int]]] = get_next_figure_grid_pos()

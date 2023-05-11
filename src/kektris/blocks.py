@@ -152,6 +152,7 @@ class Window:
         self._get_window: Optional[list[list[Cell | None]]] = None
         self._map_window: Optional[list[Cell]] = None
         self._quarter: Optional[list[tuple[int, int]]] = None
+        self._window_figure_pos: Optional[list[tuple[int, int]]] = None
 
     def __repr__(self) -> str:
         return f'Window top_left: {self.top_left}, orientation: {self.orientation.name} ' \
@@ -173,7 +174,7 @@ class Window:
 
     @property
     def get_window(self) -> list[list[Cell | None]]:
-        """Get window of cells
+        """Get window cells (only on grid cells)
         """
         if self._get_window is None:
             self._get_window = [[None, None, None, None] for _ in range(4)]
@@ -203,7 +204,7 @@ class Window:
 
     @property
     def map_window(self) -> list[Cell]:
-        """Get mapped cell
+        """Get mwindow figure cells (only on grid cells)
         """
         if self._map_window is None:
             self._map_window = []
@@ -212,6 +213,20 @@ class Window:
                     [cell for m, cell in zip(maps, cells) if cell and m]
                         )
         return self._map_window
+
+    @property
+    def window_figure_pos(self) -> list[tuple[int, int]]:
+        """Get window figure positions include offgrid positions
+        """
+        if self._window_figure_pos is None:
+            self._window_figure_pos = []
+            for row in range(4):
+                y = row + self.top_left[1]
+                for col in range(4):
+                    x = col + self.top_left[0]
+                    if self.orientation.value[row][col]:
+                        self._window_figure_pos.append((x, y))
+        return self._window_figure_pos
 
     def has_frozen(self) -> bool:
         """Has figure frozen cells in mapped window
@@ -222,10 +237,10 @@ class Window:
         return False
 
     def is_in_quarter(self) -> bool:
-        """Is all figure cells in quarter
+        """Is all figure positions is in quarter
         """
-        for cell in self.map_window:
-            if cell.pos not in self.quarter:
+        for pos in self.window_figure_pos:
+            if pos not in self.quarter:
                 return False
         return True
 
