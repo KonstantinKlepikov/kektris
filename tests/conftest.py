@@ -34,9 +34,19 @@ def mock_app(monkeypatch) -> Callable:
     def mock_init(*args, **kwargs) -> Callable:
         return None
 
+    def mock_image(*args, **kwargs) -> Callable:
+        class M:
+            def __init__(self, *args, **kwargs) -> None:
+                pass
+
+            def load(self, *args, **kwargs):
+                return None
+        return M
+
     monkeypatch.setattr(pyxel, "run", mock_run)
     monkeypatch.setattr(pyxel, "load", mock_load)
     monkeypatch.setattr(pyxel, "init", mock_init)
+    monkeypatch.setattr(pyxel, "image", mock_image)
 
 @pytest.fixture(scope="function")
 def make_app(monkeypatch, mock_app: Callable) -> Game:

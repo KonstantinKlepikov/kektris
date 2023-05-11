@@ -9,6 +9,7 @@ from constraints import GameConst as const
 class Game:
     def __init__(self) -> None:
         pyxel.init(256, 256, title="Kektris")
+        pyxel.image(0).load(0, 0, "Q-tris-s.png")
         self.reset()
         pyxel.run(self.update, self.draw)
 
@@ -196,6 +197,8 @@ class Game:
         pyxel.rectb(170, 220, 13, 13, 12)
         pyxel.text(175, 224, "G", self.hide_reveal(self.grid_higlight))
         pyxel.text(185, 224, "grid", 12)
+
+        pyxel.blt(187, 235, 0, 0, 0, 65, 18)
 
     def draw_aside(self) -> None:
         """Draw aside parameters
