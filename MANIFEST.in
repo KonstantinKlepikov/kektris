@@ -1,3 +1,4 @@
 include requirements-dev.txt
 include Makefile
 include Q-tris-s.png
+include Q-tris.png
