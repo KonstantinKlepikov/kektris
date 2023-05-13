@@ -137,7 +137,7 @@ class Game:
         self.move_figure(move_direction, self.figure.move_figure)
         self.move_figure(rotate_direction, self.figure.rotate_figure)
 
-        if self.frame_count_from_last_move == const.MAX_GAME_SPEED - self.speed:
+        if self.frame_count_from_last_move == const.GAME_SPEED_LIMIT - self.speed:
             window = self.figure.move_figure(self.figure.window.move_direction)
             self.final_moves_and_game_checks(window)
             return

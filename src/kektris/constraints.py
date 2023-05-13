@@ -270,9 +270,10 @@ class GameConst:
     START_FRAME_COUNT: int = 5
     COLOR_TIMOUT: int = 60
 
-    PRIZE_BY_CLEAR: int = 70
-    START_CLEAR_LENGTH: int = 7
-    MAX_CLEAR_LENGHT: int = 11
-    LENGHT_MODIFICATOR: int = 10000
+    PRIZE_BY_CLEAR: int = 60
+    START_CLEAR_LENGTH: int = 6
+    MAX_CLEAR_LENGHT: int = 10
+    LENGHT_MODIFICATOR: int = 7000
     MAX_GAME_SPEED: int = 22
+    GAME_SPEED_LIMIT: int = 30
     SPEED_MODIFICATOR: int = 1000
