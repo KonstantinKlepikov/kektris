@@ -23,5 +23,5 @@ build-example:
 	pyxel app2html kektris
 	rm -f example/kektris.pyxapp
 	mv kektris.pyxapp example/
-	rm -f docs/kektris.html
-	mv kektris.html docs/
+	rm -f docs/index.html
+	mv kektris.html docs/index.html
