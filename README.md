@@ -8,6 +8,8 @@
 
 Typicaly: `pip install -e .[dev]`
 
+Or use [pypi package](https://pypi.org/project/kektris/) with `pip install kektris`
+
 Available make cli:
 
 ```sh
@@ -34,8 +36,8 @@ pyxel app2html PYXEL_APP_FILE(.pyxapp)
 
 ## Play the game in web
 
-[wasm launcher](https://kitao.github.io/pyxel/wasm/launcher/?play=KonstantinKlepikov.kektris.example.kektris)
+[web launcher](https://konstantinklepikov.github.io/kektris/)
 
-## Reference
+## References
 
 A little of code idea is get from [this](https://github.com/shivanju/pyxel-games/tree/master) tetris repo. Music is copypasted from [pyxel](https://github.com/kitao/pyxel) demo.
