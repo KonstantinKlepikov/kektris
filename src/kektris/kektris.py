@@ -10,6 +10,43 @@ class Game:
     def __init__(self) -> None:
         pyxel.init(256, 256, title="Kektris")
         pyxel.image(0).load(0, 0, "Q-tris-s.png")
+        pyxel.sound(0).set(
+            "e2e2c2g1 g1g1c2e2 d2d2d2g2 g2g2rr" "c2c2a1e1 e1e1a1c2 b1b1b1e2 e2e2rr",
+            "p",
+            "4",
+            "vffn fnff vffs vfnn",
+            25,
+        )
+        pyxel.sound(1).set(
+            "r a1b1c2 b1b1c2d2 g2g2g2g2 c2c2d2e2" "f2f2f2e2 f2e2d2c2 d2d2d2d2 g2g2r r ",
+            "s",
+            "4",
+            "nnff vfff vvvv vfff svff vfff vvvv svnn",
+            25,
+        )
+        pyxel.sound(2).set(
+            "c1g1c1g1 c1g1c1g1 b0g1b0g1 b0g1b0g1" "a0e1a0e1 a0e1a0e1 g0d1g0d1 g0d1g0d1",
+            "t",
+            "5",
+            "n",
+            25,
+        )
+        pyxel.sound(3).set(
+            "f0c1f0c1 g0d1g0d1 c1g1c1g1 a0e1a0e1" "f0c1f0c1 f0c1f0c1 g0d1g0d1 g0d1g0d1",
+            "t",
+            "5",
+            "n",
+            25,
+        )
+        pyxel.sound(4).set(
+            "f0ra4r f0ra4r f0ra4r f0f0a4r", "n", "5511 5511 5511 5411", "f", 25
+        )
+        pyxel.sound(5).set("g1a1", "s", "75", "f", 8)
+        pyxel.sound(6).set("f1g1f1g1", "p", "7755", "s", 8)
+        pyxel.sound(7).set("c2d3c2d3 c2d3c2d3", "p", "7775 7775", "s", 12)
+        pyxel.sound(8).set("c1d2e3f2 g1a0b0", "p", "7777 655", "f", 20)
+        self.music: bool = True
+        self.play_music()
         self.reset()
         pyxel.run(self.update, self.draw)
 
@@ -35,6 +72,11 @@ class Game:
         self.frame_count_from_last_move: int = const.START_FRAME_COUNT
         self.is_game_over: bool = False
 
+    def play_music(self):
+        pyxel.play(0, [0, 1], loop=True)
+        pyxel.play(1, [2, 3], loop=True)
+        pyxel.play(2, 4, loop=True)
+
     def draw(self) -> None:
         """Draw current screen
         """
@@ -56,6 +98,14 @@ class Game:
                 self.paused = False
             else:
                 self.paused = True
+
+        if pyxel.btnp(pyxel.KEY_M):
+            if self.music:
+                self.music = False
+                pyxel.stop()
+            else:
+                self.music = True
+                self.play_music()
 
         if pyxel.btnp(pyxel.KEY_G):
             if self.grid_higlight:
@@ -194,11 +244,15 @@ class Game:
         pyxel.text(115, 224, "P", self.hide_reveal(self.paused))
         pyxel.text(125, 224, "play/pause", 12)
 
-        pyxel.rectb(170, 220, 13, 13, 12)
-        pyxel.text(175, 224, "G", self.hide_reveal(self.grid_higlight))
-        pyxel.text(185, 224, "grid", 12)
+        pyxel.rectb(62, 235, 13, 13, 12)
+        pyxel.text(67, 239, "G", self.hide_reveal(self.grid_higlight))
+        pyxel.text(77, 239, "grid", 12)
 
-        pyxel.blt(187, 235, 0, 0, 0, 65, 18)
+        pyxel.rectb(110, 235, 13, 13, 12)
+        pyxel.text(115, 239, "M", self.hide_reveal(self.music))
+        pyxel.text(125, 239, "music", 12)
+
+        pyxel.blt(180, 227, 0, 0, 0, 65, 18)
 
     def draw_aside(self) -> None:
         """Draw aside parameters
@@ -383,6 +437,7 @@ class Game:
             window: Window = operation(direction)
             if self.figure.is_valid_figure(window) and window.is_on_grid():
                 self.figure.block_figure(window)
+                pyxel.play(3, 5)
 
     # TODO: test me
     def clear_lines(self) -> None:
@@ -398,6 +453,7 @@ class Game:
                         self.change_score()
                         self.change_speed()
                         self.change_line_lenght()
+                        pyxel.play(3, 7)
                     shifted = self.get_shifted_frozen(line)
                     if shifted:
                         self.move_shifted_frozen(shifted)
@@ -410,10 +466,14 @@ class Game:
         """
         if self.figure.is_valid_figure(window):
             self.figure.block_figure(window)
+            pyxel.play(3, 5)
         elif not self.figure.window.is_full_on_grid():
             self.is_game_over = True
+            pyxel.play(3, 8)
         else:
-            self.grid.freeze_blocked()
+            if self.grid.get_blocked:
+                pyxel.play(3, 6)
+                self.grid.freeze_blocked()
             self.clear_lines()
             self.push_next_figure()
         self.frame_count_from_last_move = const.START_FRAME_COUNT

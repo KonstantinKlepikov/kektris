@@ -272,7 +272,7 @@ class GameConst:
 
     PRIZE_BY_CLEAR: int = 70
     START_CLEAR_LENGTH: int = 7
-    MAX_CLEAR_LENGHT: int = 10
+    MAX_CLEAR_LENGHT: int = 11
     LENGHT_MODIFICATOR: int = 10000
-    MAX_GAME_SPEED: int = 35
+    MAX_GAME_SPEED: int = 22
     SPEED_MODIFICATOR: int = 1000
